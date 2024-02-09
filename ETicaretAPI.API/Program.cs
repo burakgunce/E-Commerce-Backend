@@ -1,3 +1,6 @@
+
+using ETicaretAPI.Persistence;
+
 namespace ETicaretAPI.API
 {
     public class Program
@@ -8,6 +11,8 @@ namespace ETicaretAPI.API
 
             // Add services to the container.
 
+            builder.Services.AddPersistenceServices();// IoC Container
+            
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
