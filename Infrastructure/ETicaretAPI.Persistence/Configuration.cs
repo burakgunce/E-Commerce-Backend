@@ -14,11 +14,20 @@ namespace ETicaretAPI.Persistence
         {
             get
             {
-                ConfigurationManager configurationManager = new();
-                configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/ETicaretAPI.API"));
-                configurationManager.AddJsonFile("appsettings.json");
+                //ConfigurationManager configurationManager = new();
+                //configurationManager.SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../../Presentation/ETicaretAPI.API"));
+                //configurationManager.AddJsonFile("appsettings.json");
 
-                return configurationManager.GetConnectionString("PostgreSQL");
+                //return configurationManager.GetConnectionString("PostgreSQL");
+
+                string jsonFilePath = "C:\\Users\\PC\\Desktop\\ETicaretProjesi\\ETicaretAPI\\ETicaretAPI.API\\appsettings.json"; // 
+
+                IConfigurationBuilder configurationBuilder = new ConfigurationBuilder()
+                    .AddJsonFile(jsonFilePath, optional: false, reloadOnChange: true);
+
+                IConfigurationRoot configuration = configurationBuilder.Build();
+
+                return configuration.GetConnectionString("PostgreSQL");
 
 
             }
