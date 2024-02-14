@@ -12,6 +12,10 @@ namespace ETicaretAPI.API
             // Add services to the container.
 
             builder.Services.AddPersistenceServices();// IoC Container
+
+            builder.Services.AddCors(options => options.AddDefaultPolicy(policy => 
+            policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
+            ));
             
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -27,6 +31,7 @@ namespace ETicaretAPI.API
                 app.UseSwaggerUI();
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
