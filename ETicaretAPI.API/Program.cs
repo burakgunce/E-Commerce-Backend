@@ -2,6 +2,7 @@
 using ETicaretAPI.Application.Validators.Products;
 using ETicaretAPI.Infrastructure.Filters;
 using ETicaretAPI.Persistence;
+using ETicaretAPI.Infrastructure;
 using FluentValidation.AspNetCore;
 
 namespace ETicaretAPI.API
@@ -15,6 +16,7 @@ namespace ETicaretAPI.API
             
 
             builder.Services.AddPersistenceServices();// IoC Container
+            builder.Services.AddInfrastructureServices();
 
             builder.Services.AddCors(options => options.AddDefaultPolicy(policy => 
             policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
