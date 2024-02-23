@@ -18,6 +18,8 @@ namespace ETicaretAPI.API
             builder.Services.AddPersistenceServices();// IoC Container
             builder.Services.AddInfrastructureServices();
 
+            //builder.Services.AddStorage(StorageType.Azure);
+
             builder.Services.AddCors(options => options.AddDefaultPolicy(policy => 
             policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
             ));
