@@ -1,7 +1,10 @@
 ﻿
 using ETicaretAPI.Application.Abstractions.Storage;
+using ETicaretAPI.Infrastructure.enums;
+using ETicaretAPI.Infrastructure.Enums;
 using ETicaretAPI.Infrastructure.Services;
 using ETicaretAPI.Infrastructure.Services.Storage;
+using ETicaretAPI.Infrastructure.Services.Storage.Local;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -21,5 +24,25 @@ namespace ETicaretAPI.Infrastructure
         {
             serviceCollection.AddScoped<IStorage, T>();
         }
+        public static void AddStorage<T>(this IServiceCollection serviceCollection, StorageType storageType) where T : class, IStorage
+        {
+            switch (storageType)
+            {
+                case StorageType.Local:
+                    serviceCollection.AddScoped<IStorage, LocalStorage>();
+                    break;
+                case StorageType.Azure:
+                    
+                    break;
+                case StorageType.AWS:
+                    
+                    break;
+                default:
+                    serviceCollection.AddScoped<IStorage, LocalStorage>();
+                    break;
+                
+            }
+        }
+
     }
 }
