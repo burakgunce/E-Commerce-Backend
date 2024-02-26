@@ -5,6 +5,7 @@ using ETicaretAPI.Persistence;
 using ETicaretAPI.Infrastructure;
 using FluentValidation.AspNetCore;
 using ETicaretAPI.Infrastructure.Services.Storage.Local;
+using ETicaretAPI.Infrastructure.Services.Storage.Azure;
 
 namespace ETicaretAPI.API
 {
@@ -20,7 +21,8 @@ namespace ETicaretAPI.API
             builder.Services.AddInfrastructureServices();
 
             //builder.Services.AddStorage(StorageType.Azure);
-            builder.Services.AddStorage<LocalStorage>();
+            //builder.Services.AddStorage<LocalStorage>();
+            builder.Services.AddStorage<AzureStorage>();
 
             builder.Services.AddCors(options => options.AddDefaultPolicy(policy => 
             policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
