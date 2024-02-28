@@ -6,6 +6,7 @@ using ETicaretAPI.Infrastructure;
 using FluentValidation.AspNetCore;
 using ETicaretAPI.Infrastructure.Services.Storage.Local;
 using ETicaretAPI.Infrastructure.Services.Storage.Azure;
+using ETicaretAPI.Application;
 
 namespace ETicaretAPI.API
 {
@@ -19,6 +20,7 @@ namespace ETicaretAPI.API
 
             builder.Services.AddPersistenceServices();// IoC Container
             builder.Services.AddInfrastructureServices();
+            builder.Services.AddApplicationServices();
 
             //builder.Services.AddStorage(StorageType.Azure);
             //builder.Services.AddStorage<LocalStorage>();
