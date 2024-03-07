@@ -15,6 +15,9 @@ using Serilog.Core;
 using NpgsqlTypes;
 using Serilog.Sinks.PostgreSQL;
 using System.Security.Claims;
+using Serilog.Context;
+using ETicaretAPI.API.Configurations.ColumnWriters;
+using Microsoft.AspNetCore.HttpLogging;
 
 namespace ETicaretAPI.API
 {
@@ -50,12 +53,24 @@ namespace ETicaretAPI.API
                     {"time_stamp", new TimestampColumnWriter(NpgsqlDbType.Timestamp)},
                     {"exception", new ExceptionColumnWriter(NpgsqlDbType.Text)},
                     {"log_event", new LogEventSerializedColumnWriter(NpgsqlDbType.Json)},
-                    //{"user_name", new UsernameColumnWriter()}
+                    {"user_name", new UsernameColumnWriter()}
                 })
+                .WriteTo.Seq(builder.Configuration["Seq:ServerURL"])
+                .Enrich.FromLogContext()
+                .MinimumLevel.Information()
                 .CreateLogger();
             
-            builder.Host.UseSerilog();
-            
+            builder.Host.UseSerilog(log);
+
+            builder.Services.AddHttpLogging(logging =>
+            {
+                logging.LoggingFields = HttpLoggingFields.All;
+                logging.RequestHeaders.Add("sec-ch-ua");
+                logging.MediaTypeOptions.AddText("application/javascript");
+                logging.RequestBodyLogLimit = 4096;
+                logging.ResponseBodyLogLimit = 4096;
+            });
+
             builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
                 .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>())
                 .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
@@ -90,14 +105,24 @@ namespace ETicaretAPI.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            
             app.UseStaticFiles();
+
+            app.UseSerilogRequestLogging();
+
+            app.UseHttpLogging();
             app.UseCors();
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.Use(async (context, next) =>
+            {
+                var username = context.User?.Identity?.IsAuthenticated != null || true ? context.User.Identity.Name : null;
+                LogContext.PushProperty("user_name", username);
+                await next();
+            });
 
             app.MapControllers();
 

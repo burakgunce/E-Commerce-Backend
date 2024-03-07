@@ -12,7 +12,8 @@ namespace ETicaretAPI.API.Configurations.ColumnWriters
 
         public override object GetValue(LogEvent logEvent, IFormatProvider formatProvider = null)
         {
-            throw new NotImplementedException();
+            var (username, value) = logEvent.Properties.FirstOrDefault(p => p.Key == "user_name");
+            return value?.ToString() ?? null;
         }
     }
 }
