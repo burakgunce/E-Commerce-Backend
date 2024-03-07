@@ -10,6 +10,11 @@ using ETicaretAPI.Application;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Serilog;
+using Serilog.Core;
+using NpgsqlTypes;
+using Serilog.Sinks.PostgreSQL;
+using System.Security.Claims;
 
 namespace ETicaretAPI.API
 {
@@ -32,6 +37,24 @@ namespace ETicaretAPI.API
             builder.Services.AddCors(options => options.AddDefaultPolicy(policy => 
             policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()
             ));
+
+            Logger log = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("logs/log.txt")
+                .WriteTo.PostgreSQL(builder.Configuration.GetConnectionString("PostgreSQL"), "logs", needAutoCreateTable: true,
+                columnOptions: new Dictionary<string, ColumnWriterBase>
+                {
+                    {"message", new RenderedMessageColumnWriter(NpgsqlDbType.Text)},
+                    {"message_template", new MessageTemplateColumnWriter(NpgsqlDbType.Text)},
+                    {"level", new LevelColumnWriter(true , NpgsqlDbType.Varchar)},
+                    {"time_stamp", new TimestampColumnWriter(NpgsqlDbType.Timestamp)},
+                    {"exception", new ExceptionColumnWriter(NpgsqlDbType.Text)},
+                    {"log_event", new LogEventSerializedColumnWriter(NpgsqlDbType.Json)},
+                    //{"user_name", new UsernameColumnWriter()}
+                })
+                .CreateLogger();
+            
+            builder.Host.UseSerilog();
             
             builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
                 .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>())
@@ -53,7 +76,9 @@ namespace ETicaretAPI.API
                         ValidAudience = builder.Configuration["Token:Audience"],
                         ValidIssuer = builder.Configuration["Token:Issuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"])),
-                        LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires != null ? expires > DateTime.UtcNow : false
+                        LifetimeValidator = (notBefore, expires, securityToken, validationParameters) => expires != null ? expires > DateTime.UtcNow : false,
+
+                        NameClaimType = ClaimTypes.Name // to get name value from User.Identity.Name on jwt
                     };
                 });
 
