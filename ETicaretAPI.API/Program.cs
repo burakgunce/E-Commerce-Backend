@@ -19,6 +19,7 @@ using Serilog.Context;
 using ETicaretAPI.API.Configurations.ColumnWriters;
 using Microsoft.AspNetCore.HttpLogging;
 using ETicaretAPI.API.Extensions;
+using ETicaretAPI.SignalR;
 
 namespace ETicaretAPI.API
 {
@@ -33,6 +34,7 @@ namespace ETicaretAPI.API
             builder.Services.AddPersistenceServices();// IoC Container
             builder.Services.AddInfrastructureServices();
             builder.Services.AddApplicationServices();
+            builder.Services.AddSignalRServices();
 
             //builder.Services.AddStorage(StorageType.Azure);
             //builder.Services.AddStorage<LocalStorage>();
@@ -127,6 +129,7 @@ namespace ETicaretAPI.API
             });
 
             app.MapControllers();
+            app.MapHubs();
 
             app.Run();
         }
