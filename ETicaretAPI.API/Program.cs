@@ -31,6 +31,7 @@ namespace ETicaretAPI.API
 
             
 
+            builder.Services.AddHttpContextAccessor(); // to can access to bussiness logic in classes that requested from client with httpcontext
             builder.Services.AddPersistenceServices();// IoC Container
             builder.Services.AddInfrastructureServices();
             builder.Services.AddApplicationServices();
