@@ -1,6 +1,7 @@
 ﻿using ETicaretAPI.Application.Abstractions.Services;
 using ETicaretAPI.Application.DTOs.Order;
 using ETicaretAPI.Application.Repositories;
+using ETicaretAPI.Domain.Entities;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -16,11 +17,15 @@ namespace ETicaretAPI.Persistence.Services
     {
         readonly IOrderWriteRepository _orderWriteRepository;
         readonly IOrderReadRepository _orderReadRepository;
+        readonly ICompletedOrderWriteRepository _completedOrderWriteRepository;
+        readonly ICompletedOrderReadRepository _completedOrderReadRepository;
 
-        public OrderService(IOrderWriteRepository orderWriteRepository, IOrderReadRepository orderReadRepository)
+        public OrderService(IOrderWriteRepository orderWriteRepository, IOrderReadRepository orderReadRepository, ICompletedOrderWriteRepository completedOrderWriteRepository, ICompletedOrderReadRepository completedOrderReadRepository)
         {
             _orderWriteRepository = orderWriteRepository;
             _orderReadRepository = orderReadRepository;
+            _completedOrderWriteRepository = completedOrderWriteRepository;
+            _completedOrderReadRepository = completedOrderReadRepository;
         }
 
         public async Task CreateOrderAsync(CreateOrder createOrder)
@@ -38,7 +43,7 @@ namespace ETicaretAPI.Persistence.Services
             await _orderWriteRepository.SaveAsync();
         }
 
-        public Task<ListOrder> GetAllOrdersAsync(int page, int size)
+        public async Task<ListOrder> GetAllOrdersAsync(int page, int size)
         {
             var query = _orderReadRepository.Table.Include(o => o.Basket)
                       .ThenInclude(b => b.User)
@@ -117,6 +122,16 @@ namespace ETicaretAPI.Persistence.Services
                 OrderCode = data2.OrderCode,
                 Completed = data2.Completed
             };
+        }
+
+        public async Task CompleteOrderAsync(string id)
+        {
+            Order order = await _orderReadRepository.GetByIdAsync(id);
+            if (order != null)
+            {
+                await _completedOrderWriteRepository.AddAsync(new() { OrderId = Guid.Parse(id) });
+                await _completedOrderWriteRepository.SaveAsync();
+            }
         }
     }
 }
