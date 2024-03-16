@@ -20,6 +20,7 @@ using ETicaretAPI.API.Configurations.ColumnWriters;
 using Microsoft.AspNetCore.HttpLogging;
 using ETicaretAPI.API.Extensions;
 using ETicaretAPI.SignalR;
+using ETicaretAPI.API.Filters;
 
 namespace ETicaretAPI.API
 {
@@ -75,7 +76,11 @@ namespace ETicaretAPI.API
                 logging.ResponseBodyLogLimit = 4096;
             });
 
-            builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
+            builder.Services.AddControllers(options =>
+            {
+                options.Filters.Add<ValidationFilter>();
+                options.Filters.Add<RolePermissionFilter>();
+            })
                 .AddFluentValidation(configuration => configuration.RegisterValidatorsFromAssemblyContaining<CreateProductValidator>())
                 .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
             
