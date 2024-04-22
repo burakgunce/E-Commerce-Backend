@@ -71,3 +71,33 @@ This project builds the backend part of a mini e-commerce website to fulfill all
 
 ## WebAPI Layer
 ![WebAPI Layer](https://github.com/burakgunce/E-Commerce-Backend/assets/87397100/2d6a52ee-4aed-4983-a7e9-97e4ad67032d)
+
+
+| Technology / Library                                        | Version  |
+|-------------------------------------------------------------|----------|
+| .NET                                                        | 6.0      |
+| Microsoft.AspNetCore.Http                                   | 2.2.2    |
+| Microsoft.AspNetCore.Identity                               | 2.2.0    |
+| Microsoft.AspNetCore.Identity.EntityFrameworkCore           | 6.0.26   |
+| Microsoft.AspNetCore.Authentication.JwtBearer               | 6.0.26   |
+| Microsoft.Extensions.Configuration                          | 6.0.1    |
+| Microsoft.Extensions.Configuration.Json                     | 6.0.0    |
+| Microsoft.Extensions.DependencyInjection.Abstractions   | 8.0.0    |
+| Microsoft.EntityFrameworkCore                              | 6.0.26   |
+| Microsoft.EntityFrameworkCore.Design                        | 6.0.26   |
+| Microsoft.EntityFrameworkCore.Tools                          | 6.0.26   |
+| Npgsql.EntityFrameworkCore.PostgreSQL                       | 6.0.22   |
+| FluentValidation                                            | 11.9.0   |
+| FluentValidation.AspNetCore                                 | 11.3.0   |
+| FluentValidation.DependencyInjectionExtensions              | 11.9.0   |
+| MediatR                                                     | 12.2.0   |
+| MediatR.Extensions.Microsoft.DependencyInjection          | 11.0.0   |
+| Google.Apis.Auth                                            | 1.67.0   |
+| QRCoder                                                     | 1.4.3    |
+| Azure.Storage.Blobs                                         | 12.19.1  |
+| Serilog                                                     | 3.1.1    |
+| Serilog.AspNetCore                                          | 6.0.1    |
+| Serilog.Sinks.Seq                                           | 7.0.0    |
+| Serilog.Sinks.PostgreSQL                                    | 2.3.0    |
+| Swashbuckle.AspNetCore                                      | 6.5.0    |
+
